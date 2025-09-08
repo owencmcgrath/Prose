@@ -1,0 +1,224 @@
+/* Custom editor styles for lex.page-like aesthetic */
+
+/* Writing area card effect */
+.writing-card {
+  box-shadow: 
+    0 1px 3px 0 rgba(0, 0, 0, 0.1),
+    0 1px 2px -1px rgba(0, 0, 0, 0.1),
+    0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.writing-card:hover {
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1),
+    0 20px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+.dark .writing-card {
+  box-shadow: 
+    0 1px 3px 0 rgba(0, 0, 0, 0.3),
+    0 1px 2px -1px rgba(0, 0, 0, 0.3),
+    0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+.dark .writing-card:hover {
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.3),
+    0 4px 6px -4px rgba(0, 0, 0, 0.3),
+    0 20px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+/* Smooth caret animation */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+/* Editor textarea styling */
+textarea {
+  caret-color: #3b82f6;
+  line-height: 1.75;
+}
+
+/* Remove textarea resize handle */
+textarea::-webkit-resizer {
+  display: none;
+}
+
+/* Subtle focus effect */
+textarea:focus {
+  animation: focusFade 0.3s ease-out;
+}
+
+@keyframes focusFade {
+  from {
+    opacity: 0.7;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Markdown preview link hover effect */
+.prose a {
+  transition: all 0.2s ease;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e5e5e5;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #d4d4d4;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #374151;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4b5563;
+}
+
+/* Smooth transitions for save indicator */
+.save-indicator {
+  transition: opacity 0.3s ease;
+}
+
+/* Typography improvements */
+.prose {
+  font-feature-settings: "kern" 1, "liga" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+/* Explicit heading styles to ensure they render properly */
+.prose h1 {
+  font-size: 2.25rem !important;
+  font-weight: 700 !important;
+  line-height: 2.5rem !important;
+  margin-bottom: 2rem !important;
+  margin-top: 0 !important;
+  color: #111827 !important;
+}
+
+.dark .prose h1 {
+  color: #f9fafb !important;
+}
+
+.prose h2 {
+  font-size: 1.875rem !important;
+  font-weight: 600 !important;
+  line-height: 2.25rem !important;
+  margin-bottom: 1.5rem !important;
+  margin-top: 3rem !important;
+  color: #111827 !important;
+}
+
+.dark .prose h2 {
+  color: #f9fafb !important;
+}
+
+.prose h3 {
+  font-size: 1.5rem !important;
+  font-weight: 500 !important;
+  line-height: 2rem !important;
+  margin-bottom: 1rem !important;
+  margin-top: 2.5rem !important;
+  color: #111827 !important;
+}
+
+.dark .prose h3 {
+  color: #f9fafb !important;
+}
+
+.prose p {
+  font-size: 1rem !important;
+  line-height: 1.75rem !important;
+  margin-bottom: 1.5rem !important;
+  color: #374151 !important;
+}
+
+.dark .prose p {
+  color: #d1d5db !important;
+}
+
+/* Code block styling */
+.prose pre {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding: 1rem;
+  border-radius: 0.375rem;
+}
+
+.prose code {
+  font-family: 'JetBrains Mono', 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+}
+
+/* List styling */
+.prose ul, .prose ol {
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin: 0.5rem 0;
+}
+
+/* Blockquote styling */
+.prose blockquote {
+  font-style: normal;
+  quotes: none;
+}
+
+/* Table styling */
+.prose table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 2rem 0;
+}
+
+.prose th, .prose td {
+  border: 1px solid #e5e7eb;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.dark .prose th, .dark .prose td {
+  border-color: #374151;
+}
+
+.prose th {
+  background: #f9fafb;
+  font-weight: 600;
+}
+
+.dark .prose th {
+  background: #1f2937;
+}
+
+/* Horizontal rule */
+.prose hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 3rem 0;
+}
+
+.dark .prose hr {
+  border-top-color: #374151;
+}
