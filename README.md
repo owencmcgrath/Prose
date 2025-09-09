@@ -1,8 +1,7 @@
-<div>
-   <img src="public/images/prose-logo-small.png" alt="Prose Logo" 
-   style="float: left; width: 150px; height: auto; margin-right: 10px; 
-   margin-bottom: 5px;">
-    <p>
+<div style="text-align: center;">
+   <img src="public/images/prose-logo-small.png" alt="Prose Logo" style="display: inline-block; width: 150px; height: auto;">
+</div>
+<br>
 A minimalist Markdown editor designed for focused writing with AI-powered assistance and real-time preview capabilities.
 
 I live in Markdown. Every blog post, every note, every README, every chapter of my novel—it all starts as plain text with simple formatting marks. After years of this workflow, I've developed strong opinions about how a Markdown editor should work. Apparently, *very* strong opinions.
@@ -12,8 +11,6 @@ Halfway through writing my novel, I realized I was switching between editors thr
 The more I wrote, the more these small frustrations compounded. I found myself spending more time fighting with my tools than actually writing. When you're trying to maintain flow state while crafting a narrative, even the smallest friction feels like sandpaper on your brain.
 
 So I did what any self-respecting software engineer would do: I spent a weekend building exactly what I wanted.
-   </p>
-</div>
 
 <div style="text-align: center;">
    <img src="public/images/prose-main-small.png" alt="Prose Main" style="display: 
@@ -244,3 +241,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Code highlighting by highlight.js
 - AI features powered by OpenAI GPT-3.5-turbo
 - Styled with Tailwind CSS custom design system
+
+> Prose is dedicated to my father, Philip King, who recently passed away unexpectedly. I created Prose to keep myself occupied while grieving. I love you, dad.
