@@ -1,5 +1,8 @@
-# Prose
-
+<div>
+   <img src="public/images/prose-logo-small.png" alt="Prose Logo" 
+   style="float: left; width: 150px; height: auto; margin-right: 10px; 
+   margin-bottom: 5px;">
+    <p>
 A minimalist Markdown editor designed for focused writing with AI-powered assistance and real-time preview capabilities.
 
 I live in Markdown. Every blog post, every note, every README, every chapter of my novel—it all starts as plain text with simple formatting marks. After years of this workflow, I've developed strong opinions about how a Markdown editor should work. Apparently, *very* strong opinions.
@@ -9,6 +12,13 @@ Halfway through writing my novel, I realized I was switching between editors thr
 The more I wrote, the more these small frustrations compounded. I found myself spending more time fighting with my tools than actually writing. When you're trying to maintain flow state while crafting a narrative, even the smallest friction feels like sandpaper on your brain.
 
 So I did what any self-respecting software engineer would do: I spent a weekend building exactly what I wanted.
+   </p>
+</div>
+
+<div style="text-align: center;">
+   <img src="public/images/prose-main-small.png" alt="Prose Main" style="display: 
+   inline-block; max-width: 100%; height: auto;">
+</div>
 
 **Prose** is a lightweight React app built for writers who love Markdown. It's not trying to be everything to everyone. It's trying to be one thing exceptionally well: a clean, fast, distraction-free environment for writing in Markdown.
 
@@ -157,6 +167,37 @@ src/
 | `POST` | `/api/documents` | Create new document |
 | `PUT` | `/api/documents/:id` | Update document |
 | `DELETE` | `/api/documents/:id` | Delete document |
+| `PUT` | `/api/documents/:id/order` | Update document display order |
+
+### Document Ordering
+
+The document ordering endpoint allows you to reorder documents in the sidebar:
+
+**Endpoint:** `PUT /api/documents/:id/order`
+
+**Request Body:**
+```json
+{
+  "order": 2
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "document": {
+    "id": 1,
+    "name": "My Document",
+    "content": "...",
+    "display_order": 2,
+    "created_at": "2025-01-09T10:00:00Z",
+    "updated_at": "2025-01-09T10:30:00Z"
+  }
+}
+```
+
+Documents are automatically reordered when one is moved, maintaining sequential order numbers. Documents with lower `display_order` values appear first in the list.
 
 ## Configuration
 
