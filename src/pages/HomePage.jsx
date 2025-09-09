@@ -519,9 +519,9 @@ function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-950">
+    <div className="min-h-screen bg-gray-100 dark:bg-neutral-800">
       {/* Top Bar */}
-      <div className="fixed top-0 left-0 right-0 z-30 bg-white/50 dark:bg-black/50 backdrop-blur-sm border-b border-gray-200/30 dark:border-gray-800/30 px-6 py-4 flex items-center justify-between">
+      <div className="fixed top-0 left-0 right-0 z-30 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm border-b border-gray-200/30 dark:border-neutral-700/30 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
           {/* Document sidebar toggle */}
           <button
@@ -533,7 +533,7 @@ function HomePage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <img src="/images/prose.png" alt="Prose - Minimal Markdown Editor" className="h-10 w-auto" />
+          <img src="/images/prose.png" alt="Prose - Minimal Markdown Editor" className="h-10 w-auto dark:invert" />
         </div>
         <div className="flex items-center gap-4">
           {/* Auto-save indicator */}
@@ -555,12 +555,12 @@ function HomePage() {
           </div>
           
           {/* View Mode Toggle */}
-          <div className="flex items-center bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+          <div className="flex items-center bg-gray-100 dark:bg-neutral-700 rounded-lg p-1">
             <button
               onClick={() => setViewMode('edit')}
               className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
                 viewMode === 'edit' 
-                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm' 
+                  ? 'bg-white dark:bg-neutral-600 text-gray-900 dark:text-gray-100 shadow-sm' 
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
               }`}
             >
@@ -570,7 +570,7 @@ function HomePage() {
               onClick={() => setViewMode('preview')}
               className={`px-4 py-1.5 text-sm font-medium rounded-md transition-colors ${
                 viewMode === 'preview' 
-                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm' 
+                  ? 'bg-white dark:bg-neutral-600 text-gray-900 dark:text-gray-100 shadow-sm' 
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
               }`}
             >
@@ -609,18 +609,18 @@ function HomePage() {
       </div>
 
       {/* Main Content */}
-      <div className="p-8 pt-24 relative bg-gray-100 dark:bg-gray-950 min-h-full">
+      <div className="p-8 pt-24 relative bg-gray-100 dark:bg-neutral-800 min-h-full">
         {/* Document Sidebar */}
-        <div className={`fixed top-24 left-8 bottom-8 w-80 bg-white dark:bg-gray-800 shadow-xl rounded-lg transform transition-transform duration-300 ease-in-out z-10 overflow-hidden ${
+        <div className={`fixed top-24 left-8 bottom-8 w-80 bg-white dark:bg-neutral-700 shadow-xl rounded-lg transform transition-transform duration-300 ease-in-out z-10 overflow-hidden ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-96'
         }`}>
-          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="p-6 border-b border-gray-200 dark:border-neutral-700">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Documents</h2>
               <div className="flex gap-2">
                 <button
                   onClick={saveDocument}
-                  className="p-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                  className="p-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded transition-colors"
                   title="Save document"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -629,7 +629,7 @@ function HomePage() {
                 </button>
                 <button
                   onClick={newDocument}
-                  className="p-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                  className="p-1.5 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded transition-colors"
                   title="New document"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -660,7 +660,7 @@ function HomePage() {
                 onDragOver={(e) => handleDragOver(e, doc)}
                 onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, doc)}
-                className={`p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer group transition-all duration-200 ${
+                className={`p-4 border-b border-gray-100 dark:border-neutral-700 hover:bg-gray-50 dark:hover:bg-neutral-700 cursor-pointer group transition-all duration-200 ${
                   currentDocId === doc.id ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800' : ''
                 } ${
                   dragOverDocId === doc.id && dropPosition === 'before' ? 'border-t-2 border-t-blue-500 pt-6' : ''
@@ -692,7 +692,7 @@ function HomePage() {
                           }}
                           onBlur={() => saveRename(doc.id)}
                           autoFocus
-                          className="w-full font-medium text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-700 border border-blue-300 dark:border-blue-600 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          className="w-full font-medium text-gray-900 dark:text-gray-100 bg-white dark:bg-neutral-600 border border-blue-300 dark:border-blue-600 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 truncate">{doc.preview}</p>
                       </div>
@@ -732,11 +732,11 @@ function HomePage() {
         </div>
 
         {/* AI suggestions sidebar */}
-        <div className={`fixed top-24 right-8 bottom-8 w-80 bg-white dark:bg-gray-800 shadow-xl rounded-lg transform transition-transform duration-300 ease-in-out z-10 flex flex-col ${
+        <div className={`fixed top-24 right-8 bottom-8 w-80 bg-white dark:bg-neutral-700 shadow-xl rounded-lg transform transition-transform duration-300 ease-in-out z-10 flex flex-col ${
           aiSidebarOpen ? 'translate-x-0' : 'translate-x-96'
         }`}>
           {/* Header */}
-          <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+          <div className="p-6 border-b border-gray-200 dark:border-neutral-700 flex-shrink-0">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">AI Suggestions</h2>
               <button
@@ -770,7 +770,7 @@ function HomePage() {
               </div>
             ) : (
               aiSuggestions.map((suggestion, index) => (
-                <div key={index} className="p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer">
+                <div key={index} className="p-4 border-b border-gray-100 dark:border-neutral-700 hover:bg-gray-50 dark:hover:bg-neutral-700 cursor-pointer">
                   <h3 className="font-medium text-gray-900 dark:text-gray-100 text-sm mb-2">{suggestion.title}</h3>
                   <p className="text-sm text-gray-600 dark:text-gray-400">{suggestion.content}</p>
                 </div>
@@ -779,7 +779,7 @@ function HomePage() {
           </div>
           
           {/* AI Question Input - Fixed at bottom */}
-          <div className="flex-shrink-0 p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 rounded-b-lg">
+          <div className="flex-shrink-0 p-4 bg-white dark:bg-neutral-700 border-t border-gray-200 dark:border-neutral-600 rounded-b-lg">
             <form 
               onSubmit={(e) => {
                 e.preventDefault()
@@ -795,7 +795,7 @@ function HomePage() {
                 onChange={(e) => setAiQuestion(e.target.value)}
                 placeholder="Ask a question..."
                 disabled={aiQuestionLoading}
-                className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
+                className="flex-1 px-3 py-2 text-sm border border-gray-300 dark:border-neutral-600 rounded-md bg-white dark:bg-neutral-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:opacity-50"
               />
               <button
                 type="submit"
@@ -816,11 +816,11 @@ function HomePage() {
 
         {/* Floating Formatting Toolbar */}
         {viewMode === 'edit' && (
-          <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-20 bg-white dark:bg-gray-800 shadow-lg rounded-lg px-2 py-1.5 flex items-center gap-1 border border-gray-200 dark:border-gray-700">
+          <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-20 bg-white dark:bg-neutral-700 shadow-lg rounded-lg px-2 py-1.5 flex items-center gap-1 border border-gray-200 dark:border-neutral-600">
               {/* Heading dropdown */}
               <select 
                 onChange={(e) => e.target.value && insertHeading(parseInt(e.target.value))}
-                className="px-2 py-1 text-sm bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer outline-none text-gray-700 dark:text-gray-300 appearance-none pr-6"
+                className="px-2 py-1 text-sm bg-white dark:bg-neutral-700 hover:bg-gray-100 dark:hover:bg-neutral-600 rounded cursor-pointer outline-none text-gray-700 dark:text-gray-300 appearance-none pr-6"
                 style={{ backgroundImage: 'none' }}
                 value=""
               >
@@ -830,12 +830,12 @@ function HomePage() {
                 <option value="3">H3</option>
               </select>
               
-              <div className="w-px h-5 bg-gray-300 dark:bg-gray-600" />
+              <div className="w-px h-5 bg-gray-300 dark:bg-neutral-600" />
               
               {/* Bold */}
               <button
                 onClick={() => insertFormatting('**', '**')}
-                className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                className="p-1.5 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded transition-colors"
                 title="Bold (Ctrl+B)"
               >
                 <svg className="w-4 h-4 text-gray-700 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
@@ -846,7 +846,7 @@ function HomePage() {
               {/* Italic */}
               <button
                 onClick={() => insertFormatting('*', '*')}
-                className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                className="p-1.5 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded transition-colors"
                 title="Italic (Ctrl+I)"
               >
                 <svg className="w-4 h-4 text-gray-700 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
@@ -857,7 +857,7 @@ function HomePage() {
               {/* Underline (using HTML tags in markdown) */}
               <button
                 onClick={() => insertFormatting('<u>', '</u>')}
-                className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                className="p-1.5 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded transition-colors"
                 title="Underline"
               >
                 <svg className="w-4 h-4 text-gray-700 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
@@ -868,7 +868,7 @@ function HomePage() {
               {/* Strikethrough */}
               <button
                 onClick={() => insertFormatting('~~', '~~')}
-                className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                className="p-1.5 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded transition-colors"
                 title="Strikethrough"
               >
                 <svg className="w-4 h-4 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -877,12 +877,12 @@ function HomePage() {
                 </svg>
               </button>
               
-              <div className="w-px h-5 bg-gray-300 dark:bg-gray-600" />
+              <div className="w-px h-5 bg-gray-300 dark:bg-neutral-600" />
               
               {/* Link */}
               <button
                 onClick={() => insertFormatting('[', '](url)')}
-                className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                className="p-1.5 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded transition-colors"
                 title="Insert link"
               >
                 <svg className="w-4 h-4 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -893,7 +893,7 @@ function HomePage() {
               {/* Quote */}
               <button
                 onClick={() => insertFormatting('> ', '')}
-                className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                className="p-1.5 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded transition-colors"
                 title="Quote"
               >
                 <svg className="w-4 h-4 text-gray-700 dark:text-gray-300" fill="currentColor" viewBox="0 0 24 24">
@@ -904,7 +904,7 @@ function HomePage() {
               {/* Code */}
               <button
                 onClick={() => insertFormatting('`', '`')}
-                className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                className="p-1.5 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded transition-colors"
                 title="Inline code"
               >
                 <svg className="w-4 h-4 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -912,12 +912,12 @@ function HomePage() {
                 </svg>
               </button>
               
-              <div className="w-px h-5 bg-gray-300 dark:bg-gray-600" />
+              <div className="w-px h-5 bg-gray-300 dark:bg-neutral-600" />
               
               {/* Numbered list */}
               <button
                 onClick={() => insertList(true)}
-                className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                className="p-1.5 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded transition-colors"
                 title="Numbered list"
               >
                 <svg className="w-4 h-4 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -929,7 +929,7 @@ function HomePage() {
               {/* Bullet list */}
               <button
                 onClick={() => insertList(false)}
-                className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                className="p-1.5 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded transition-colors"
                 title="Bullet list"
               >
                 <svg className="w-4 h-4 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -937,12 +937,12 @@ function HomePage() {
                 </svg>
               </button>
               
-              <div className="w-px h-5 bg-gray-300 dark:bg-gray-600" />
+              <div className="w-px h-5 bg-gray-300 dark:bg-neutral-600" />
               
               {/* Horizontal rule */}
               <button
                 onClick={() => insertFormatting('\n---\n', '')}
-                className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                className="p-1.5 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded transition-colors"
                 title="Horizontal rule"
               >
                 <svg className="w-4 h-4 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -964,7 +964,7 @@ function HomePage() {
                   const afterText = text.substring(end)
                   setText(beforeText + cleanText + afterText)
                 }}
-                className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors"
+                className="p-1.5 hover:bg-gray-100 dark:hover:bg-neutral-700 rounded transition-colors"
                 title="Clear formatting"
               >
                 <svg className="w-4 h-4 text-gray-700 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -976,7 +976,7 @@ function HomePage() {
         )}
         
         {/* Main content */}
-        <div className="w-[800px] mx-auto bg-white dark:bg-gray-800 shadow-xl rounded-lg">
+        <div className="w-[800px] mx-auto bg-white dark:bg-neutral-700 shadow-xl rounded-lg">
           {viewMode === 'edit' && (
             <textarea
               ref={textareaRef}
@@ -1017,15 +1017,15 @@ function HomePage() {
                     ul: ({ children }) => <ul className="mb-6 list-disc pl-6 space-y-2 text-lg text-gray-700 dark:text-gray-300 font-light">{children}</ul>,
                     ol: ({ children }) => <ol className="mb-6 list-decimal pl-6 space-y-2 text-lg text-gray-700 dark:text-gray-300 font-light">{children}</ol>,
                     li: ({ children }) => <li className="leading-relaxed" style={{ lineHeight: '1.8' }}>{children}</li>,
-                    blockquote: ({ children }) => <blockquote className="border-l-4 border-gray-300 dark:border-gray-600 pl-6 my-6 italic text-gray-700 dark:text-gray-300">{children}</blockquote>,
+                    blockquote: ({ children }) => <blockquote className="border-l-4 border-gray-300 dark:border-neutral-600 pl-6 my-6 italic text-gray-700 dark:text-gray-300">{children}</blockquote>,
                     code: ({ inline, children }) => {
                       if (inline) {
-                        return <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 text-sm font-mono rounded text-gray-800 dark:text-gray-200">{children}</code>;
+                        return <code className="px-1.5 py-0.5 bg-gray-100 dark:bg-neutral-700 text-sm font-mono rounded text-gray-800 dark:text-gray-200">{children}</code>;
                       }
                       return <code>{children}</code>;
                     },
                     pre: ({ children }) => (
-                      <pre className="mb-6 p-4 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg overflow-x-auto">
+                      <pre className="mb-6 p-4 bg-gray-50 dark:bg-neutral-800 border border-gray-200 dark:border-neutral-600 rounded-lg overflow-x-auto">
                         <code className="text-gray-800 dark:text-gray-200">{children}</code>
                       </pre>
                     ),
