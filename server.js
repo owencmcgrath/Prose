@@ -25,6 +25,26 @@ app.get('/api/documents', (req, res) => {
   }
 })
 
+// Update document order - must come before :id route
+app.put('/api/documents/order', (req, res) => {
+  try {
+    const { documentOrders } = req.body
+    if (!Array.isArray(documentOrders)) {
+      return res.status(400).json({ error: 'Document orders must be an array' })
+    }
+    
+    const updated = documentDb.updateOrder(documentOrders)
+    if (!updated) {
+      return res.status(500).json({ error: 'Failed to update document order' })
+    }
+    
+    res.json({ success: true })
+  } catch (error) {
+    console.error('Error updating document order:', error)
+    res.status(500).json({ error: 'Failed to update document order' })
+  }
+})
+
 app.get('/api/documents/:id', (req, res) => {
   try {
     const document = documentDb.getById(req.params.id)

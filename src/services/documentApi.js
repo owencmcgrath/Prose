@@ -68,4 +68,16 @@ export const documentApi = {
     })
     return handleResponse(response)
   },
+
+  // Update document order
+  async updateOrder(documentOrders) {
+    const response = await fetch(`${API_BASE}/documents/order`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ documentOrders }),
+    })
+    return handleResponse(response)
+  },
 }

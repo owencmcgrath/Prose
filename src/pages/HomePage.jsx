@@ -29,6 +29,9 @@ function HomePage() {
   const [loadingDocuments, setLoadingDocuments] = useState(true)
   const [editingDocId, setEditingDocId] = useState(null)
   const [editingTitle, setEditingTitle] = useState('')
+  const [draggedDoc, setDraggedDoc] = useState(null)
+  const [dragOverDocId, setDragOverDocId] = useState(null)
+  const [dropPosition, setDropPosition] = useState('before') // 'before' or 'after'
 
   // Load documents from API on component mount
   useEffect(() => {
@@ -36,6 +39,7 @@ function HomePage() {
       try {
         setLoadingDocuments(true)
         const docs = await documentApi.getAll()
+        // Documents are already ordered by display_order from the backend
         setDocuments(docs)
       } catch (error) {
         console.error('Failed to load documents:', error)
@@ -344,6 +348,106 @@ function HomePage() {
     setEditingTitle('')
   }
 
+  // Drag and Drop handlers
+  const handleDragStart = (e, doc) => {
+    setDraggedDoc(doc)
+    e.dataTransfer.effectAllowed = 'move'
+    // Add dragging class after a slight delay to prevent immediate visual feedback
+    setTimeout(() => {
+      e.target.classList.add('opacity-50')
+    }, 0)
+  }
+
+  const handleDragEnd = (e) => {
+    e.target.classList.remove('opacity-50')
+    setDraggedDoc(null)
+    setDragOverDocId(null)
+  }
+
+  const handleDragOver = (e, doc) => {
+    e.preventDefault()
+    e.dataTransfer.dropEffect = 'move'
+    
+    // Only update if we're actually over a different document
+    if (draggedDoc && draggedDoc.id !== doc.id) {
+      const draggedIndex = documents.findIndex(d => d.id === draggedDoc.id)
+      const targetIndex = documents.findIndex(d => d.id === doc.id)
+      
+      // Determine if we're dragging up or down
+      if (draggedIndex < targetIndex) {
+        // Dragging down - show indicator below the target
+        setDropPosition('after')
+      } else {
+        // Dragging up - show indicator above the target
+        setDropPosition('before')
+      }
+      
+      setDragOverDocId(doc.id)
+    }
+  }
+
+  const handleDragLeave = (e) => {
+    // Only reset if we're leaving the drop zone entirely
+    if (!e.currentTarget.contains(e.relatedTarget)) {
+      setDragOverDocId(null)
+    }
+  }
+
+  const handleDrop = async (e, targetDoc) => {
+    e.preventDefault()
+    
+    if (!draggedDoc || draggedDoc.id === targetDoc.id) {
+      setDragOverDocId(null)
+      return
+    }
+
+    // Find indices
+    const draggedIndex = documents.findIndex(doc => doc.id === draggedDoc.id)
+    const targetIndex = documents.findIndex(doc => doc.id === targetDoc.id)
+
+    if (draggedIndex === -1 || targetIndex === -1) {
+      setDragOverDocId(null)
+      return
+    }
+
+    // Create new array with reordered documents
+    const newDocuments = [...documents]
+    const [removed] = newDocuments.splice(draggedIndex, 1)
+    
+    // Adjust insertion index based on drop position
+    let insertIndex = targetIndex
+    if (dropPosition === 'after') {
+      // If dropping after, we need to adjust the index
+      insertIndex = draggedIndex < targetIndex ? targetIndex : targetIndex + 1
+    } else {
+      // If dropping before
+      insertIndex = draggedIndex < targetIndex ? targetIndex - 1 : targetIndex
+    }
+    
+    newDocuments.splice(insertIndex, 0, removed)
+
+    // Update state immediately for responsive UI
+    setDocuments(newDocuments)
+    setDragOverDocId(null)
+
+    // Persist the new order to the backend
+    try {
+      // Create array of document orders with their new positions
+      const documentOrders = newDocuments.map((doc, index) => ({
+        id: doc.id,
+        order: index
+      }))
+      
+      // Call API to update order in database
+      await documentApi.updateOrder(documentOrders)
+    } catch (error) {
+      console.error('Failed to save document order:', error)
+      // Revert the order on error
+      setDocuments(documents)
+      // Optionally show an error notification to the user
+    }
+  }
+
   // Formatting helper functions
   const insertFormatting = (before, after = '') => {
     if (!textareaRef.current) return
@@ -507,7 +611,7 @@ function HomePage() {
       {/* Main Content */}
       <div className="p-8 pt-24 relative bg-gray-100 dark:bg-gray-950 min-h-full">
         {/* Document Sidebar */}
-        <div className={`fixed top-24 left-8 bottom-8 w-80 bg-white dark:bg-gray-800 shadow-xl rounded-lg transform transition-transform duration-300 ease-in-out z-10 ${
+        <div className={`fixed top-24 left-8 bottom-8 w-80 bg-white dark:bg-gray-800 shadow-xl rounded-lg transform transition-transform duration-300 ease-in-out z-10 overflow-hidden ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-96'
         }`}>
           <div className="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -535,7 +639,7 @@ function HomePage() {
               </div>
             </div>
           </div>
-          <div className="overflow-y-auto h-full pb-20">
+          <div className="overflow-y-auto overflow-x-hidden h-full pb-20">
             {loadingDocuments ? (
               <div className="p-4 text-center text-gray-500 dark:text-gray-400">
                 <div className="w-6 h-6 border border-gray-400 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
@@ -550,12 +654,29 @@ function HomePage() {
               <div 
                 key={doc.id} 
                 onClick={() => loadDocument(doc)}
-                className={`p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer group ${
+                draggable
+                onDragStart={(e) => handleDragStart(e, doc)}
+                onDragEnd={handleDragEnd}
+                onDragOver={(e) => handleDragOver(e, doc)}
+                onDragLeave={handleDragLeave}
+                onDrop={(e) => handleDrop(e, doc)}
+                className={`p-4 border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer group transition-all duration-200 ${
                   currentDocId === doc.id ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800' : ''
+                } ${
+                  dragOverDocId === doc.id && dropPosition === 'before' ? 'border-t-2 border-t-blue-500 pt-6' : ''
+                } ${
+                  dragOverDocId === doc.id && dropPosition === 'after' ? 'border-b-2 border-b-blue-500 pb-6' : ''
                 }`}
               >
                 <div className="flex items-start justify-between">
-                  <div className="flex-1 min-w-0">
+                  <div className="flex items-start gap-2 flex-1 min-w-0">
+                    {/* Drag handle */}
+                    <div className="mt-1 cursor-move opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                      <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M9 5h2v2H9V5zm0 4h2v2H9V9zm0 4h2v2H9v-2zm0 4h2v2H9v-2zm4-12h2v2h-2V5zm0 4h2v2h-2V9zm0 4h2v2h-2v-2zm0 4h2v2h-2v-2z"/>
+                      </svg>
+                    </div>
+                    <div className="flex-1 min-w-0 overflow-hidden">
                     {editingDocId === doc.id ? (
                       <div onClick={(e) => e.stopPropagation()}>
                         <input
@@ -581,8 +702,9 @@ function HomePage() {
                         <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 truncate">{doc.preview}</p>
                       </>
                     )}
+                    </div>
                   </div>
-                  <div className="flex ml-2 gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200">
+                  <div className="flex ml-2 gap-1 opacity-0 group-hover:opacity-100 transition-all duration-200 flex-shrink-0">
                     <button
                       onClick={(e) => startEditingTitle(doc, e)}
                       className="p-1 text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded"
