@@ -13,6 +13,16 @@
   body {
     @apply bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-200;
   }
+  
+  /* Only make the top bar draggable */
+  .draggable {
+    -webkit-app-region: drag;
+  }
+  
+  /* Make interactive elements and content areas non-draggable */
+  button, a, input, textarea, select, .no-drag, .draggable button, .draggable a {
+    -webkit-app-region: no-drag;
+  }
 }
 
 @layer components {

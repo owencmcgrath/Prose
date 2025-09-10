@@ -1,12 +1,21 @@
 {
-  "name": "app-template",
+  "name": "prose-app",
+  "productName": "Prose",
   "version": "1.0.0",
   "type": "module",
+  "main": "electron.js",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "node server.js"
+    "start": "node server.js",
+    "electron": "electron .",
+    "electron:dev": "NODE_ENV=development electron .",
+    "electron:build": "npm run build && electron-builder",
+    "dist": "npm run build && electron-builder --mac --windows --linux",
+    "dist:mac": "npm run build && electron-builder --mac",
+    "dist:win": "npm run build && electron-builder --windows",
+    "dist:linux": "npm run build && electron-builder --linux"
   },
   "dependencies": {
     "better-sqlite3": "^12.2.0",
@@ -23,8 +32,54 @@
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
+    "electron": "^38.0.0",
+    "electron-builder": "^26.0.12",
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.17",
     "vite": "^6.0.6"
+  },
+  "build": {
+    "appId": "com.yourcompany.prose",
+    "productName": "Prose",
+    "directories": {
+      "output": "dist"
+    },
+    "asar": true,
+    "asarUnpack": [
+      "server.js",
+      "database.js",
+      "node_modules/**/*",
+      "build/**/*"
+    ],
+    "files": [
+      "build/**/*",
+      "server.js",
+      "database.js",
+      "electron.js",
+      "node_modules/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "documents.db",
+        "to": "documents.db"
+      }
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "build-resources/icon.icns"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build-resources/icon.ico"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build-resources/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }

@@ -521,7 +521,7 @@ function HomePage() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-neutral-800">
       {/* Top Bar */}
-      <div className="fixed top-0 left-0 right-0 z-30 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm border-b border-gray-200/30 dark:border-neutral-700/30 px-6 py-4 flex items-center justify-between">
+      <div className="fixed top-0 left-0 right-0 z-30 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm border-b border-gray-200/30 dark:border-neutral-700/30 px-6 py-4 flex items-center justify-between draggable" style={{ paddingLeft: window.navigator.platform.toLowerCase().includes('mac') ? '88px' : '24px' }}>
         <div className="flex items-center gap-4">
           {/* Document sidebar toggle */}
           <button

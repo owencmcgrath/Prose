@@ -1,6 +1,7 @@
 
 import express from 'express'
 import path from 'path'
+import fs from 'fs'
 import { fileURLToPath } from 'url'
 import { documentDb } from './database.js'
 
@@ -10,9 +11,23 @@ const __dirname = path.dirname(__filename)
 const app = express()
 const PORT = process.env.PORT || 8080
 
+// Determine build directory based on environment
+const isPackaged = __dirname.includes('app.asar')
+let buildPath;
+
+if (isPackaged) {
+  // In packaged app, build files are unpacked
+  // __dirname is already in the .unpacked directory when running
+  buildPath = path.join(__dirname, 'build')
+} else {
+  buildPath = path.join(__dirname, 'build')
+}
+
+console.log('Build path:', buildPath)
+
 // Middleware
 app.use(express.json())
-app.use(express.static(path.join(__dirname, 'build')))
+app.use(express.static(buildPath))
 
 // API Routes
 app.get('/api/documents', (req, res) => {
@@ -109,7 +124,7 @@ app.delete('/api/documents/:id', (req, res) => {
 
 // Handle React routing, return all requests to React app
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'))
+  res.sendFile(path.join(buildPath, 'index.html'))
 })
 
 app.listen(PORT, () => {
