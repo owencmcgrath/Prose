@@ -521,21 +521,28 @@ function HomePage() {
   return (
     <div className="min-h-screen bg-gray-100 dark:bg-neutral-800">
       {/* Top Bar */}
-      <div className="fixed top-0 left-0 right-0 z-30 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm border-b border-gray-200/30 dark:border-neutral-700/30 px-6 py-4 flex items-center justify-between draggable" style={{ paddingLeft: window.navigator.platform.toLowerCase().includes('mac') ? '88px' : '24px' }}>
-        <div className="flex items-center gap-4">
-          {/* Document sidebar toggle */}
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-            title="Toggle documents"
-          >
-            <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          <img src="/images/prose.png" alt="Prose - Minimal Markdown Editor" className="h-10 w-auto dark:invert" />
-        </div>
-        <div className="flex items-center gap-4">
+      <div className="fixed top-0 left-0 right-0 z-30 bg-white/50 dark:bg-neutral-900/50 backdrop-blur-sm border-b border-gray-200/30 dark:border-neutral-700/30 draggable">
+        {/* Mac traffic light area - reserve space */}
+        {window.navigator.userAgent.toLowerCase().includes('mac') && (
+          <div className="h-6 w-full" />
+        )}
+        
+        {/* Main header content below traffic lights */}
+        <div className="px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            {/* Document sidebar toggle */}
+            <button
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
+              title="Toggle documents"
+            >
+              <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <img src="/images/prose.png" alt="Prose - Minimal Markdown Editor" className="h-10 w-auto dark:invert" />
+          </div>
+          <div className="flex items-center gap-4">
           {/* Auto-save indicator */}
           <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 min-w-[80px]">
             {saveStatus === 'saving' && (
@@ -605,13 +612,14 @@ function HomePage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
           </button>
+          </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="p-8 pt-24 relative bg-gray-100 dark:bg-neutral-800 min-h-full">
+      <div className={`p-8 relative bg-gray-100 dark:bg-neutral-800 min-h-full ${window.navigator.userAgent.toLowerCase().includes('mac') ? 'pt-32' : 'pt-24'}`}>
         {/* Document Sidebar */}
-        <div className={`fixed top-24 left-8 bottom-8 w-80 bg-white dark:bg-neutral-700 shadow-xl rounded-lg transform transition-transform duration-300 ease-in-out z-10 overflow-hidden ${
+        <div className={`fixed ${window.navigator.userAgent.toLowerCase().includes('mac') ? 'top-32' : 'top-24'} left-8 bottom-8 w-80 bg-white dark:bg-neutral-700 shadow-xl rounded-lg transform transition-transform duration-300 ease-in-out z-10 overflow-hidden ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-96'
         }`}>
           <div className="p-6 border-b border-gray-200 dark:border-neutral-700">
@@ -732,7 +740,7 @@ function HomePage() {
         </div>
 
         {/* AI suggestions sidebar */}
-        <div className={`fixed top-24 right-8 bottom-8 w-80 bg-white dark:bg-neutral-700 shadow-xl rounded-lg transform transition-transform duration-300 ease-in-out z-10 flex flex-col ${
+        <div className={`fixed ${window.navigator.userAgent.toLowerCase().includes('mac') ? 'top-32' : 'top-24'} right-8 bottom-8 w-80 bg-white dark:bg-neutral-700 shadow-xl rounded-lg transform transition-transform duration-300 ease-in-out z-10 flex flex-col ${
           aiSidebarOpen ? 'translate-x-0' : 'translate-x-96'
         }`}>
           {/* Header */}
@@ -816,7 +824,7 @@ function HomePage() {
 
         {/* Floating Formatting Toolbar */}
         {viewMode === 'edit' && (
-          <div className="fixed top-20 left-1/2 transform -translate-x-1/2 z-20 bg-white dark:bg-neutral-700 shadow-lg rounded-lg px-2 py-1.5 flex items-center gap-1 border border-gray-200 dark:border-neutral-600">
+          <div className={`fixed ${window.navigator.userAgent.toLowerCase().includes('mac') ? 'top-28' : 'top-20'} left-1/2 transform -translate-x-1/2 z-20 bg-white dark:bg-neutral-700 shadow-lg rounded-lg px-2 py-1.5 flex items-center gap-1 border border-gray-200 dark:border-neutral-600`}>
               {/* Heading dropdown */}
               <select 
                 onChange={(e) => e.target.value && insertHeading(parseInt(e.target.value))}

@@ -1,12 +1,23 @@
 import Database from 'better-sqlite3'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import fs from 'fs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-// Initialize database
-const db = new Database(path.join(__dirname, 'documents.db'))
+// Get userData path from environment variable or fallback to app directory
+const userDataPath = process.env.USER_DATA_PATH || __dirname
+
+// Ensure the userData directory exists
+if (userDataPath !== __dirname && !fs.existsSync(userDataPath)) {
+  fs.mkdirSync(userDataPath, { recursive: true })
+}
+
+// Initialize database in userData directory
+const dbPath = path.join(userDataPath, 'documents.db')
+console.log('Database path:', dbPath)
+const db = new Database(dbPath)
 
 // Create documents table if it doesn't exist
 db.exec(`

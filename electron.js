@@ -17,6 +17,15 @@ const port = isDev ? 3000 : 8080;
 // Set app name early
 app.setName('Prose');
 
+// Set about panel options for macOS
+app.setAboutPanelOptions({
+  applicationName: 'Prose',
+  applicationVersion: '1.0.0',
+  version: '1.0.0',
+  copyright: '© 2025 Prose',
+  credits: 'In loving memory of Philip King'
+});
+
 function findNodeBinary() {
   // Common Node.js locations to try
   const commonPaths = [
@@ -80,11 +89,16 @@ function startServer() {
     const nodeBinary = findNodeBinary();
     console.log('Using node binary:', nodeBinary);
     
+    // Get userData path for storing database
+    const userDataPath = app.getPath('userData');
+    console.log('User data path:', userDataPath);
+    
     serverProcess = spawn(nodeBinary, [serverPath], {
       cwd: workingDir,
       env: { 
         ...process.env, 
         NODE_ENV: 'production',
+        USER_DATA_PATH: userDataPath,
         PATH: process.env.PATH + ':/usr/local/bin:/opt/homebrew/bin:' + process.env.HOME + '/.nvm/versions/node/v22.17.0/bin'
       }
     });
