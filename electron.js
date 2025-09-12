@@ -146,7 +146,7 @@ function startServer() {
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1200,
+    width: 1000,
     height: 800,
     webPreferences: {
       nodeIntegration: false,
@@ -158,6 +158,24 @@ function createWindow() {
     titleBarStyle: process.platform === 'darwin' ? 'hiddenInset' : 'default',
     trafficLightPosition: { x: 16, y: 16 },
     show: true // Show immediately
+  });
+
+  // Set Content Security Policy to allow OpenAI API calls
+  const session = mainWindow.webContents.session;
+  session.webRequest.onHeadersReceived((details, callback) => {
+    callback({
+      responseHeaders: {
+        ...details.responseHeaders,
+        'Content-Security-Policy': [
+          "default-src 'self' http://localhost:* ws://localhost:*; " +
+          "script-src 'self' 'unsafe-inline' 'unsafe-eval' http://localhost:*; " +
+          "style-src 'self' 'unsafe-inline' http://localhost:*; " +
+          "img-src 'self' data: http://localhost:*; " +
+          "connect-src 'self' http://localhost:* ws://localhost:* https://api.openai.com; " +
+          "font-src 'self' data:;"
+        ]
+      }
+    });
   });
 
   const url = isDev 

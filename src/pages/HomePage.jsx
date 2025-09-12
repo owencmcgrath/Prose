@@ -32,6 +32,9 @@ function HomePage() {
   const [draggedDoc, setDraggedDoc] = useState(null)
   const [dragOverDocId, setDragOverDocId] = useState(null)
   const [dropPosition, setDropPosition] = useState('before') // 'before' or 'after'
+  const [showApiKeyModal, setShowApiKeyModal] = useState(false)
+  const [apiKeyInput, setApiKeyInput] = useState('')
+  const [pendingAiAction, setPendingAiAction] = useState(null)
 
   // Load documents from API on component mount
   useEffect(() => {
@@ -143,23 +146,48 @@ function HomePage() {
     setSidebarOpen(false)
   }
 
-  const askAIQuestion = async (question) => {
-    setAiQuestionLoading(true)
-    
-    try {
-      // Try to get API key from environment variable, localStorage, or prompt
+  const getApiKey = () => {
+    return new Promise((resolve) => {
+      // Try to get API key from environment variable or localStorage
       let apiKey = import.meta.env.VITE_OPENAI_API_KEY
       
       if (!apiKey) {
         apiKey = localStorage.getItem('openai_api_key')
       }
       
-      if (!apiKey) {
-        apiKey = prompt('Please enter your OpenAI API key (it will be saved locally):')
-        if (apiKey) {
-          localStorage.setItem('openai_api_key', apiKey)
-        }
+      if (apiKey) {
+        resolve(apiKey)
+      } else {
+        // Show modal to get API key from user
+        setPendingAiAction(() => resolve)
+        setShowApiKeyModal(true)
       }
+    })
+  }
+
+  const handleApiKeySubmit = () => {
+    if (apiKeyInput.trim()) {
+      localStorage.setItem('openai_api_key', apiKeyInput.trim())
+      setShowApiKeyModal(false)
+      if (pendingAiAction) {
+        pendingAiAction(apiKeyInput.trim())
+        setPendingAiAction(null)
+      }
+      setApiKeyInput('')
+    }
+  }
+
+  const handleApiKeyCancel = () => {
+    setShowApiKeyModal(false)
+    setPendingAiAction(null)
+    setApiKeyInput('')
+  }
+
+  const askAIQuestion = async (question) => {
+    setAiQuestionLoading(true)
+    
+    try {
+      const apiKey = await getApiKey()
       
       if (!apiKey) {
         throw new Error('No API key provided')
@@ -225,19 +253,7 @@ function HomePage() {
     setAiSuggestions([])
     
     try {
-      // Try to get API key from environment variable, localStorage, or prompt
-      let apiKey = import.meta.env.VITE_OPENAI_API_KEY
-      
-      if (!apiKey) {
-        apiKey = localStorage.getItem('openai_api_key')
-      }
-      
-      if (!apiKey) {
-        apiKey = prompt('Please enter your OpenAI API key (it will be saved locally):')
-        if (apiKey) {
-          localStorage.setItem('openai_api_key', apiKey)
-        }
-      }
+      const apiKey = await getApiKey()
       
       if (!apiKey) {
         throw new Error('No API key provided')
@@ -1046,6 +1062,50 @@ function HomePage() {
             </div>
           )}
         </div>
+
+        {/* API Key Modal */}
+        {showApiKeyModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white dark:bg-neutral-800 rounded-lg p-6 w-96 max-w-md mx-4">
+              <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">
+                OpenAI API Key Required
+              </h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                Please enter your OpenAI API key to use AI features. It will be saved locally for future use.
+              </p>
+              <input
+                type="password"
+                value={apiKeyInput}
+                onChange={(e) => setApiKeyInput(e.target.value)}
+                placeholder="sk-..."
+                className="w-full px-3 py-2 border border-gray-300 dark:border-neutral-600 rounded-md bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleApiKeySubmit()
+                  } else if (e.key === 'Escape') {
+                    handleApiKeyCancel()
+                  }
+                }}
+                autoFocus
+              />
+              <div className="flex justify-end gap-3 mt-6">
+                <button
+                  onClick={handleApiKeyCancel}
+                  className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleApiKeySubmit}
+                  disabled={!apiKeyInput.trim()}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Save Key
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
