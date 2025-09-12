@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, nativeTheme } from 'electron';
+import { app, BrowserWindow, Menu, nativeTheme, screen } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { spawn } from 'child_process';
@@ -63,6 +63,58 @@ function findNodeBinary() {
   // Fallback to just 'node' and hope it's in PATH
   console.log('Using fallback: node');
   return 'node';
+}
+
+function animateWindowToCenter(window) {
+  const currentBounds = window.getBounds();
+  const display = screen.getDisplayMatching(currentBounds);
+  const displayBounds = display.workArea;
+  
+  // Calculate center position
+  const targetX = Math.round(displayBounds.x + (displayBounds.width - currentBounds.width) / 2);
+  const targetY = Math.round(displayBounds.y + (displayBounds.height - currentBounds.height) / 2);
+  
+  // Current position
+  const startX = currentBounds.x;
+  const startY = currentBounds.y;
+  
+  // Skip animation if already centered (within 5px tolerance)
+  if (Math.abs(startX - targetX) < 5 && Math.abs(startY - targetY) < 5) {
+    return;
+  }
+  
+  // Animation parameters - smoother like VSCode
+  const duration = 250; // milliseconds, slightly faster
+  const startTime = Date.now();
+  
+  const animate = () => {
+    if (window.isDestroyed()) {
+      return;
+    }
+    
+    const elapsed = Date.now() - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    if (progress >= 1) {
+      // Ensure we end exactly at the target position
+      window.setPosition(targetX, targetY);
+      return;
+    }
+    
+    // Use ease-out-quart for smoother motion like VSCode
+    const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+    
+    // Calculate current position with sub-pixel precision
+    const currentX = Math.round(startX + (targetX - startX) * easeOutQuart);
+    const currentY = Math.round(startY + (targetY - startY) * easeOutQuart);
+    
+    window.setPosition(currentX, currentY);
+    
+    // Use requestAnimationFrame equivalent for smoother animation
+    setImmediate(animate);
+  };
+  
+  animate();
 }
 
 function startServer() {
@@ -276,7 +328,16 @@ function createMenu() {
       label: 'Window',
       submenu: [
         { label: 'Minimize', accelerator: 'CmdOrCtrl+M', role: 'minimize' },
-        { label: 'Close', accelerator: 'CmdOrCtrl+W', role: 'close' }
+        { label: 'Close', accelerator: 'CmdOrCtrl+W', role: 'close' },
+        {
+          label: 'Center',
+          accelerator: 'Fn+Ctrl+C',
+          click: () => {
+            if (mainWindow && !mainWindow.isDestroyed()) {
+              animateWindowToCenter(mainWindow);
+            }
+          }
+        }
       ]
     }
   ];
