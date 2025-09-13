@@ -129,8 +129,29 @@ function HomePage() {
   // Auto-resize textarea on mount and when text changes
   useLayoutEffect(() => {
     if (textareaRef.current && viewMode === 'edit') {
-      textareaRef.current.style.height = 'auto'
-      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px'
+      // Use requestAnimationFrame to defer the resize
+      requestAnimationFrame(() => {
+        if (textareaRef.current) {
+          const scrollTop = window.scrollY || document.documentElement.scrollTop
+          const cursorPos = textareaRef.current.selectionStart
+
+          // Temporarily disable scroll restoration to prevent interference
+          const scrollBehavior = document.documentElement.style.scrollBehavior
+          document.documentElement.style.scrollBehavior = 'auto'
+
+          textareaRef.current.style.height = 'auto'
+          textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px'
+
+          // Force scroll position
+          window.scrollTo({ top: scrollTop, behavior: 'instant' })
+
+          // Restore cursor position
+          textareaRef.current.setSelectionRange(cursorPos, cursorPos)
+
+          // Restore scroll behavior
+          document.documentElement.style.scrollBehavior = scrollBehavior
+        }
+      })
     }
   }, [text, viewMode])
 
@@ -1007,14 +1028,19 @@ function HomePage() {
               value={text}
               onChange={(e) => {
                 setText(e.target.value)
-                // Auto-resize textarea
-                if (textareaRef.current) {
-                  textareaRef.current.style.height = 'auto'
-                  textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px'
+                // Resize is handled by useLayoutEffect to avoid scrolling issues
+              }}
+              onKeyDown={(e) => {
+                // Handle Cmd+A (Mac) or Ctrl+A (Windows/Linux) for select all
+                if ((e.metaKey || e.ctrlKey) && e.key === 'a') {
+                  e.preventDefault()
+                  if (textareaRef.current) {
+                    textareaRef.current.select()
+                  }
                 }
               }}
               placeholder="Start writing markdown..."
-              className="w-full p-12 bg-transparent border-0 resize-none focus:outline-none text-gray-900 dark:text-gray-100 text-lg font-light placeholder:text-gray-400 dark:placeholder:text-gray-500 overflow-hidden font-sans"
+              className="w-full p-12 bg-transparent border-0 resize-none focus:outline-none text-gray-900 dark:text-gray-100 text-lg font-light placeholder:text-gray-400 dark:placeholder:text-gray-500 font-sans"
               style={{ minHeight: '11in', lineHeight: '1.9', fontFamily: 'Avenir, Avenir Next, -apple-system, sans-serif' }}
             />
             )}
