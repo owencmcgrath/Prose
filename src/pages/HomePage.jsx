@@ -140,7 +140,9 @@ function HomePage() {
           document.documentElement.style.scrollBehavior = 'auto'
 
           textareaRef.current.style.height = 'auto'
-          textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px'
+          const scrollHeight = textareaRef.current.scrollHeight
+          // Add a small buffer (2px) to prevent the minimal scrollbar issue
+          textareaRef.current.style.height = (scrollHeight + 2) + 'px'
 
           // Force scroll position
           window.scrollTo({ top: scrollTop, behavior: 'instant' })
