@@ -1,4 +1,4 @@
-import { app, BrowserWindow, Menu, nativeTheme, screen } from 'electron';
+import { app, BrowserWindow, Menu, nativeTheme, screen, shell } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { spawn } from 'child_process';
@@ -260,7 +260,22 @@ function createWindow() {
   };
   
   loadWithRetry();
-  
+
+  // Handle external links
+  mainWindow.webContents.on('will-navigate', (event, url) => {
+    // Prevent navigation away from the app
+    if (!url.startsWith(`http://localhost:${port}`)) {
+      event.preventDefault();
+      shell.openExternal(url);
+    }
+  });
+
+  // Handle new window requests (e.g., target="_blank")
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' };
+  });
+
   if (isDev) {
     mainWindow.webContents.openDevTools();
   }
@@ -351,7 +366,7 @@ function createMenu() {
         { label: 'Services', role: 'services', submenu: [] },
         { type: 'separator' },
         { label: 'Hide ' + app.getName(), accelerator: 'Command+H', role: 'hide' },
-        { label: 'Hide Others', accelerator: 'Command+Shift+H', role: 'hideothers' },
+        { label: 'Hide Others', accelerator: 'Command+Option+H', role: 'hideothers' },
         { label: 'Show All', role: 'unhide' },
         { type: 'separator' },
         { label: 'Quit', accelerator: 'Command+Q', click: () => app.quit() }

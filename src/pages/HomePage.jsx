@@ -1053,7 +1053,27 @@ function HomePage() {
                         <code className="text-gray-800 dark:text-gray-200">{children}</code>
                       </pre>
                     ),
-                    strong: ({ children }) => <strong className="font-medium text-gray-900 dark:text-gray-100">{children}</strong>
+                    strong: ({ children }) => <strong className="font-medium text-gray-900 dark:text-gray-100">{children}</strong>,
+                    a: ({ href, children }) => {
+                      const handleClick = (e) => {
+                        // In Electron, the main process will handle external links
+                        // via the will-navigate event, so we just need to handle
+                        // the fallback for web browsers
+                        if (!href?.startsWith('http://localhost')) {
+                          e.preventDefault();
+                          window.open(href, '_blank', 'noopener,noreferrer');
+                        }
+                      };
+                      return (
+                        <a
+                          href={href}
+                          onClick={handleClick}
+                          className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 underline decoration-1 underline-offset-2 cursor-pointer"
+                        >
+                          {children}
+                        </a>
+                      );
+                    }
                   }}
                 >
                   {preprocessMarkdown(text) || '# Start writing some markdown!\n\nYour preview will appear here.'}
