@@ -2,6 +2,8 @@
   "name": "prose-app",
   "productName": "Prose",
   "version": "1.0.0",
+  "description": "A minimalist markdown editor",
+  "author": "Owen McGrath <owen.c.mcgrath@icloud.com>",
   "type": "module",
   "main": "electron.js",
   "scripts": {

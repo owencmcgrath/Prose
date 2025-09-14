@@ -4,7 +4,7 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch: 
+  workflow_dispatch:
 
 jobs:
   build-mac:
@@ -26,6 +26,7 @@ jobs:
         run: npm run dist:mac
         env:
           NODE_ENV: production
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Upload DMG artifact
         uses: actions/upload-artifact@v4
@@ -34,20 +35,13 @@ jobs:
           path: dist/*.dmg
           retention-days: 30
       
-      - name: Upload App artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: prose-mac-app
-          path: dist/mac/*.app
-          retention-days: 30
-      
       - name: Create Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
             dist/*.dmg
-            dist/*.zip
+            dist/*.dmg.blockmap
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
