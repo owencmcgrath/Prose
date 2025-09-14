@@ -1,4 +1,5 @@
 class Prose < Formula
+  # feel free to change this if you want a different description
   desc "A modern markdown editor and document management application"
   homepage "https://github.com/owencmcgrath/Prose"
   url "https://github.com/owencmcgrath/Prose/archive/refs/heads/main.tar.gz"
